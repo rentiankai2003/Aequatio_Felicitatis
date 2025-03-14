@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>智乐方程 - Harmonia AI Demo</title>
+  <!-- 引入外部CSS库 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      background: #000;
+      color: #ddd;
+      font-family: sans-serif;
+      scroll-behavior: smooth;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin: 0.5em 0;
+      color: #fff;
+    }
+    p {
+      margin: 0.5em 0;
+      line-height: 1.6;
+    }
+    /* 导航栏样式 */
+    .navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      padding: 10px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(0,0,0,0.6);
+      z-index: 1000;
+    }
+    .navbar .logo {
+      font-size: 1.2em;
+      font-weight: bold;
+      color: #ffd700;
+    }
+    .navbar .nav-links {
+      list-style: none;
+      display: flex;
+      margin: 0;
+      padding: 0;
+    }
+    .navbar .nav-links li {
+      margin: 0 10px;
+    }
+    .navbar .nav-links a {
+      color: #fff;
+      text-decoration: none;
+      padding: 5px 8px;
+      font-size: 0.95em;
+    }
+    .navbar .nav-links a:hover {
+      color: #ffd700;
+    }
+    /* 首页 Hero 部分 */
+    #home {
+      position: relative;
+      width: 100%;
+      height: 100vh;
+      background: linear-gradient(60deg, #0a0a0a, #0d1f2d);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 0 20px;
+      overflow: hidden;
+    }
+    #particles-js {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+    }
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      max-width: 800px;
+    }
+    .hero-content h1 {
+      font-size: 2em;
+    }
+    .hero-content p {
+      font-size: 1.1em;
+      color: #ccc;
+      margin-bottom: 1em;
+    }
+    .cta-btn {
+      display: inline-block;
+      padding: 12px 30px;
+      font-size: 1em;
+      font-weight: bold;
+      color: #000;
+      background: linear-gradient(45deg, #b78400, #ffd700);
+      border: none;
+      border-radius: 4px;
+      text-decoration: none;
+      cursor: pointer;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .cta-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 0 10px rgba(255,215,0,0.5);
+    }
+    .down-arrow {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 2em;
+      color: #fff;
+      animation: bounce 2s infinite;
+    }
+    @keyframes bounce {
+      0%, 100% { transform: translateX(-50%) translateY(0); }
+      50% { transform: translateX(-50%) translateY(-10px); }
+    }
+    /* 公共部分样式 */
+    section {
+      padding: 80px 20px;
+      scroll-margin-top: 80px;
+    }
+    .section-title {
+      text-align: center;
+      font-size: 1.8em;
+      margin-bottom: 0.5em;
+      position: relative;
+      display: inline-block;
+    }
+    .section-title::after {
+      content: "";
+      display: block;
+      width: 50px;
+      height: 3px;
+      background: linear-gradient(to right, #b78400, #ffd700);
+      margin: 8px auto 0;
+    }
+    .section-intro {
+      text-align: center;
+      color: #ccc;
+      max-width: 600px;
+      margin: 0 auto 20px auto;
+      font-size: 0.95em;
+      line-height: 1.6;
+    }
+    /* 核心功能 Section 样式 */
+    #features {
+      background: #0d0d0d;
+    }
+    .feature-item {
+      max-width: 600px;
+      margin: 40px auto;
+      text-align: center;
+    }
+    .feature-item .icon {
+      font-size: 2em;
+      color: #ffd700;
+      margin-bottom: 10px;
+    }
+    .feature-item h3 {
+      font-size: 1.3em;
+      margin-bottom: 0.5em;
+    }
+    .feature-item p {
+      color: #ccc;
+      font-size: 0.95em;
+      line-height: 1.6;
+    }
+    /* 市场前景 Section 样式 */
+    #market {
+      background: linear-gradient(60deg, #0d1f2d, #000);
+    }
+    .stat-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      margin-top: 40px;
+    }
+    .stat-card {
+      background: rgba(255,255,255,0.05);
+      padding: 20px;
+      border-radius: 8px;
+      text-align: center;
+    }
+    .stat-card .icon {
+      font-size: 2em;
+      color: #ffd700;
+      margin-bottom: 10px;
+    }
+    .stat-card .value {
+      font-size: 1.5em;
+      font-weight: bold;
+      color: #fff;
+    }
+    .stat-card .label {
+      font-size: 0.9em;
+      color: #ccc;
+    }
+    /* 商业模式 Section 样式 */
+    #business {
+      background: linear-gradient(60deg, #000, #1a0e00);
+    }
+    /* 联系我们 Section 样式 */
+    #contact {
+      background: #000;
+    }
+    .chat-container {
+      display: flex;
+      flex-direction: column;
+      max-width: 600px;
+      height: 300px;
+      background: #1a1a1a;
+      border: 1px solid #444;
+      border-radius: 8px;
+      margin: 0 auto;
+      padding: 10px;
+      overflow-y: auto;
+    }
+    .chat-message {
+      margin: 5px 0;
+      padding: 8px 12px;
+      border-radius: 20px;
+      display: inline-block;
+      max-width: 80%;
+      line-height: 1.4;
+    }
+    .chat-message.ai {
+      background: #ffd700;
+      color: #000;
+      border-bottom-left-radius: 0;
+    }
+    .chat-message.user {
+      background: #0d6efd;
+      color: #fff;
+      border-bottom-right-radius: 0;
+      align-self: flex-end;
+    }
+    .chat-input-area {
+      max-width: 600px;
+      margin: 10px auto 0 auto;
+      display: flex;
+    }
+    #chat-input {
+      flex: 1;
+      padding: 10px;
+      border: 1px solid #555;
+      background: #111;
+      color: #fff;
+      border-radius: 4px;
+    }
+    #chat-input:focus {
+      outline: none;
+      border-color: #ffd700;
+    }
+    #send-btn {
+      padding: 10px 20px;
+      margin-left: 10px;
+      border: none;
+      border-radius: 4px;
+      background: #ffd700;
+      color: #000;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    #send-btn:hover {
+      background: #e0c200;
+    }
+  </style>
+</head>
+<body>
+  <!-- 导航栏 -->
+  <nav class="navbar">
+    <div class="logo">智乐方程</div>
+    <ul class="nav-links">
+      <li><a href="#home">首页</a></li>
+      <li><a href="#features">核心功能</a></li>
+      <li><a href="#market">市场前景</a></li>
+      <li><a href="#business">商业模式</a></li>
+      <li><a href="#contact">联系我们</a></li>
+    </ul>
+  </nav>
+  <!-- 首页 Hero 部分 -->
+  <section id="home">
+    <div id="particles-js"></div>
+    <div class="hero-content">
+      <h1 id="hero-title"><span id="hero-title-text"></span></h1>
+      <p class="hero-subtitle">AI赋能的智能社交与幸福管理平台</p>
+      <a href="#features" class="cta-btn">了解更多</a>
+    </div>
+    <a href="#features" class="down-arrow"><i class="fas fa-chevron-down"></i></a>
+  </section>
+  <!-- 核心功能 Section -->
+  <section id="features">
+    <h2 class="section-title">核心功能</h2>
+    <p class="section-intro">主要功能概览</p>
+    <!-- 功能概览卡片 -->
+    <div class="stat-grid">
+      <div class="stat-card" data-aos="fade-up">
+        <div class="icon"><i class="fas fa-user-check"></i></div>
+        <h3>AI精准匹配</h3>
+        <p>多维数据分析，精准推荐人脉与活动</p>
+      </div>
+      <div class="stat-card" data-aos="fade-up" data-aos-delay="100">
+        <div class="icon"><i class="fas fa-calendar-check"></i></div>
+        <h3>AI活动策划</h3>
+        <p>一键生成个性活动，轻松参与社交</p>
+      </div>
+      <div class="stat-card" data-aos="fade-up" data-aos-delay="200">
+        <div class="icon"><i class="fas fa-smile"></i></div>
+        <h3>幸福优化系统</h3>
+        <p>智能反馈优化，让幸福感持续提升</p>
+      </div>
+      <div class="stat-card" data-aos="fade-up" data-aos-delay="300">
+        <div class="icon"><i class="fas fa-chart-line"></i></div>
+        <h3>商业社交变现</h3>
+        <p>整合优质资源，促进社交价值转化</p>
+      </div>
+    </div>
+    <!-- 功能详细描述 -->
+    <div class="feature-item" data-aos="fade-up" data-aos-offset="50">
+      <div class="icon"><i class="fas fa-user-check"></i></div>
+      <h3>AI精准匹配</h3>
+      <p>基于多维数据（如性格、兴趣、履历），AI智能匹配最契合的人脉和社交圈，确保社交更高效有价值，助力个人和职业发展。</p>
+    </div>
+    <div class="feature-item" data-aos="fade-up" data-aos-offset="50" data-aos-delay="100">
+      <div class="icon"><i class="fas fa-calendar-check"></i></div>
+      <h3>AI自动策划活动</h3>
+      <p>通过AI自动策划系统，一键创建或加入个性化社交活动，涵盖从小型商务聚会到大型行业论坛等场景，实现线上线下无缝融合，全面优化社交效率与体验。</p>
+    </div>
+    <div class="feature-item" data-aos="fade-up" data-aos-offset="50" data-aos-delay="200">
+      <div class="icon"><i class="fas fa-smile"></i></div>
+      <h3>个性化幸福优化</h3>
+      <p>平台通过满意度反馈，动态调整社交推荐、活动安排和生活方式建议，确保用户持续优化幸福感，提高社交满意度和心理健康水平。</p>
+    </div>
+    <div class="feature-item" data-aos="fade-up" data-aos-offset="50" data-aos-delay="300">
+      <div class="icon"><i class="fas fa-chart-line"></i></div>
+      <h3>商业社交变现方案</h3>
+      <p>整合全网优质活动资源，提供企业级社交管理SaaS方案，支持商业资源精准对接，提升社交价值转化率，实现个人与企业的高效连接，助力商业合作及社群经济增长。</p>
+    </div>
+  </section>
+  <!-- 市场前景 Section -->
+  <section id="market">
+    <h2 class="section-title">市场前景</h2>
+    <p class="section-intro">全球社交、AI与心理健康相关市场增长迅猛，为「智乐方程」带来广阔前景。</p>
+    <div class="stat-grid">
+      <div class="stat-card" data-aos="fade-up">
+        <div class="icon"><i class="fas fa-users"></i></div>
+        <div class="value">48.8亿+</div>
+        <div class="label">全球社交媒体用户 (2023)</div>
+      </div>
+      <div class="stat-card" data-aos="fade-up" data-aos-delay="100">
+        <div class="icon"><i class="fas fa-chart-bar"></i></div>
+        <div class="value">$53.5亿</div>
+        <div class="label">社交媒体市场规模 (2024)</div>
+      </div>
+      <div class="stat-card" data-aos="fade-up" data-aos-delay="200">
+        <div class="icon"><i class="fas fa-robot"></i></div>
+        <div class="value">$72.5亿</div>
+        <div class="label">AI社交市场规模预测 (2029)</div>
+      </div>
+      <div class="stat-card" data-aos="fade-up" data-aos-delay="300">
+        <div class="icon"><i class="fas fa-heart"></i></div>
+        <div class="value">$154.2亿</div>
+        <div class="label">全球心理健康应用市场 (2029)</div>
+      </div>
+    </div>
+  </section>
+  <!-- 商业模式 Section -->
+  <section id="business">
+    <h2 class="section-title">商业模式</h2>
+    <p class="section-intro">平台采用会员订阅、企业合作、SaaS服务等多元商业模式，实现可持续盈利。</p>
+    <div class="stat-grid">
+      <div class="stat-card" data-aos="fade-up">
+        <div class="icon"><i class="fas fa-crown"></i></div>
+        <h3>会员订阅</h3>
+        <p>基础功能免费，高级VIP会员专享定制服务</p>
+      </div>
+      <div class="stat-card" data-aos="fade-up" data-aos-delay="100">
+        <div class="icon"><i class="fas fa-handshake"></i></div>
+        <h3>B2B合作</h3>
+        <p>与企业和品牌方合作，拓展社交商业机会</p>
+      </div>
+      <div class="stat-card" data-aos="fade-up" data-aos-delay="200">
+        <div class="icon"><i class="fas fa-cloud"></i></div>
+        <h3>企业级SaaS</h3>
+        <p>提供企业级SaaS平台，赋能组织社交管理</p>
+      </div>
+    </div>
+  </section>
+  <!-- 联系我们 Section -->
+  <section id="contact">
+    <h2 class="section-title">联系我们</h2>
+    <p class="section-intro">有任何疑问？欢迎与我们的AI助手交流。或添加微信Arenkai</p>
+    <div class="chat-container" data-aos="fade-up">
+      <div class="chat-message ai">您好，我是您的智能助手，很高兴为您服务！</div>
+    </div>
+    <div class="chat-input-area" data-aos="fade-up" data-aos-delay="100">
+      <input type="text" id="chat-input" placeholder="请输入您的消息..." />
+      <button id="send-btn">发送</button>
+    </div>
+  </section>
+  <!-- 引入外部JS库和初始化脚本 -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/particles.js/2.0.0/particles.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+  <script>
+    // 粒子背景配置
+    const particleConfig = {
+      particles: {
+        number: { value: 80, density: { enable: true, value_area: 800 } },
+        color: { value: "#ffffff" },
+        shape: { type: "circle", stroke: { width: 0, color: "#000000" } },
+        opacity: { value: 0.5 },
+        size: { value: 5 },
+        line_linked: { enable: true, distance: 150, color: "#ffffff", opacity: 0.4, width: 1 },
+        move: { enable: true, speed: 2, direction: "none", out_mode: "out", bounce: false }
+      },
+      interactivity: {
+        detect_on: "canvas",
+        events: { onhover: { enable: true, mode: "repulse" }, onclick: { enable: true, mode: "push" }, resize: true }
+      },
+      retina_detect: true
+    };
+    // 打字机效果显示标语
+    let j = 0;
+    const heroText = "让 AI赋能社交，精准匹配人脉，科学快乐每一天！";
+    function typeWriter() {
+      if (j < heroText.length) {
+        document.getElementById("hero-title-text").textContent += heroText.charAt(j);
+        j++;
+        setTimeout(typeWriter, 100);
+      } else {
+        // 标语打字完成后，淡入副标题和按钮
+        gsap.from(".hero-subtitle", { opacity: 0, y: 20, duration: 1 });
+        gsap.from(".cta-btn", { opacity: 0, y: 20, duration: 1, delay: 0.2 });
+      }
+    }
+    // 聊天交互功能
+    function initChat() {
+      const chatContainer = document.querySelector(".chat-container");
+      const chatInput = document.getElementById("chat-input");
+      const sendBtn = document.getElementById("send-btn");
+      function sendMessage() {
+        const msg = chatInput.value.trim();
+        if (!msg) return;
+        // 显示用户消息
+        const userMsgDiv = document.createElement("div");
+        userMsgDiv.className = "chat-message user";
+        userMsgDiv.textContent = msg;
+        chatContainer.appendChild(userMsgDiv);
+        chatInput.value = "";
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+        // 模拟AI回复
+        setTimeout(() => {
+          const aiReplyDiv = document.createElement("div");
+          aiReplyDiv.className = "chat-message ai";
+          aiReplyDiv.textContent = "感谢您的留言，我们将尽快联系您！";
+          chatContainer.appendChild(aiReplyDiv);
+          chatContainer.scrollTop = chatContainer.scrollHeight;
+        }, 500);
+      }
+      sendBtn.addEventListener("click", sendMessage);
+      chatInput.addEventListener("keypress", (e) => {
+        if (e.key === "Enter") {
+          e.preventDefault();
+          sendMessage();
+        }
+      });
+    }
+    // 页面加载后初始化效果
+    document.addEventListener("DOMContentLoaded", () => {
+      particlesJS("particles-js", particleConfig);
+      typeWriter();
+      AOS.init({ once: true });
+      initChat();
+    });
+  </script>
+</body>
+</html>
